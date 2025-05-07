@@ -8,6 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
 
+import Constants from 'expo-constants';
+
 
 export default function MapScreen() {
   const router = useRouter();
@@ -45,6 +47,7 @@ function Map() {
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
+  
   useEffect(() => {
     const fetchLocationAndMechanics = async () => {
       try {
@@ -69,7 +72,7 @@ function Map() {
   }, []);
 
   const getNearbyMechanics = async (latitude: number, longitude: number): Promise<Mechanic[]> => {
-    const apiKey = 'AIzaSyAKDzwQK0tsdBlqqvN1wS1cx1BAqBrfXD8'; // Replace with your actual API key
+    const apiKey = Constants.expoConfig?.extra?.API_KEY;
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=car_repair&key=${apiKey}`;
 
     try {
@@ -92,7 +95,7 @@ function Map() {
     router.push('/markerDetails')
   }
 
-  // TODO: Store marker details in firebase fireStore (Access in markerDetails (use Async)).
+  // TODO: Store marker details in firebase fireStore.
   // If have time use custom markers for availbility.
   const renderMechanicsMarkers = () => {
     return mechanics.map((marker, index) => (
@@ -162,5 +165,3 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
-
-// AIzaSyAKDzwQK0tsdBlqqvN1wS1cx1BAqBrfXD8

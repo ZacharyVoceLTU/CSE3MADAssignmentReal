@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 
 import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  TextInput
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from "react-native";
 
-import {useRouter} from 'expo-router';
+import { useRouter } from 'expo-router';
 
 export default function editDetails() {
     // use Router.useLocalSearchParams from markerDetails.tsx to get initialise useState
@@ -51,6 +51,7 @@ function ChangeContacts() {
     const [email, setEmail] = useState('');
 
     function handleSave() {
+        // Upload to firestore
         router.push('/markerDetails')
     }
 

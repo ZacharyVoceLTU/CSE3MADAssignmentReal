@@ -2,22 +2,22 @@ import React, { useState } from "react";
 
 import {
   SafeAreaView,
-  View,
   StyleSheet,
-  TouchableOpacity,
   Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { useRouter } from "expo-router";
 
 export default function Details() {
-  // Use router.useLocalSearchParams from mapScreen.tsx to get
+  // Access markerDetails from firestore using place_id as primary key, use Async
   const [avaliable, setAvaliable] = useState(false);
   const [isOwner, setIsOwner] = useState(true);
   const [Specialise, setSpecialise] = useState("");
   const [notes, setNotes] = useState("");
-  // Use array/object to store phoneNumber and email in one?
-  const [contacts, setContacts] = useState({});
+  const [phoneNo, setphoneNo] = useState("");
+  const [email, setEmail] = useState("");
 
   const router = useRouter();
 
