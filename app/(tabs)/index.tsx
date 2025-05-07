@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 
-import {useRouter} from 'expo-router'
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -50,13 +50,13 @@ export function UserLogin({ title }: { title: string }) {
         />
         <TextInput 
           style = {styles.CheckInInput}
-          placeholder='Your Phone number'
+          placeholder='Your Address'
           value = {location}
           onChangeText = {setLocation}
         />
         <TextInput 
           style = {styles.CheckInInput}
-          placeholder='Your Phone number'
+          placeholder='Your Car Manufacturer'
           value = {carModel}
           onChangeText = {setCarModel}
         />
