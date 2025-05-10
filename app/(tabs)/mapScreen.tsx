@@ -91,14 +91,15 @@ function Map() {
     }
   };
 
-  function handleDetails() {
+  function handleDetails(marker: Mechanic) {
     router.push('/markerDetails')
   }
 
   // TODO: Store marker details in firebase fireStore.
+  // Only add to firestore if not already in there
   // If have time use custom markers for availbility.
   const renderMechanicsMarkers = () => {
-    return mechanics.map((marker, index) => (
+    return mechanics.map((marker) => (
       <Marker
         key = {marker.place_id}
         coordinate = {{latitude: marker.latitude,
@@ -106,7 +107,7 @@ function Map() {
         }}
         title = {marker.name}
         description={marker.description}
-        onPress={handleDetails}
+        onPress={() => handleDetails(marker)}
       />
     ));
   };

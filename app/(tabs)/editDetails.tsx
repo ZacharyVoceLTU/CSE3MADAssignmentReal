@@ -12,13 +12,12 @@ import {
 import { useRouter } from 'expo-router';
 
 export default function editDetails() {
-    // use Router.useLocalSearchParams from markerDetails.tsx to get initialise useState
     const [specailise, setSpecialise] = useState('');
     const [notes, setNotes] = useState('')
 
     return (
         <>
-            <SafeAreaView style={{ alignItems: "center", marginBottom: 80 }}>
+            <SafeAreaView style={{ alignItems: "center"}}>
                 <Text style={{ fontSize: 50 }}> Edit Details </Text>
             </SafeAreaView>
 
@@ -46,7 +45,6 @@ export default function editDetails() {
 
 function ChangeContacts() {
     const router = useRouter();
-    // use Router.useLocalSearchParams from markerDetails.tsx to get initialise useState
     const [phoneNo, setPhoneNo] = useState('');
     const [email, setEmail] = useState('');
 

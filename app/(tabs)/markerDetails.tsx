@@ -13,7 +13,7 @@ import { useRouter } from "expo-router";
 export default function Details() {
   // Access markerDetails from firestore using place_id as primary key, use Async
   const [avaliable, setAvaliable] = useState(false);
-  const [isOwner, setIsOwner] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
   const [Specialise, setSpecialise] = useState("");
   const [notes, setNotes] = useState("");
   const [phoneNo, setphoneNo] = useState("");
@@ -25,6 +25,7 @@ export default function Details() {
     router.push("/editDetails");
   }
 
+  // Only render button if firestore shop owner with ContextAPI
   return (
     <>
       <SafeAreaView style={{ alignItems: "center" }}>
