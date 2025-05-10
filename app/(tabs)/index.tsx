@@ -1,9 +1,25 @@
 import React, { useState } from 'react';
 
 import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+
+
+
+// Firebase Imports
+import { initializeApp } from "firebase/app";
+import { getAuth } from 'firebase/auth';
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+import '../../firebase.js';
+
+const {firebaseConfig} = require('../../firebase.js');
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 export default function HomeScreen() {
 const router = useRouter();

@@ -3,20 +3,6 @@ import { useState } from 'react';
 import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// Import the functions you need from the SDKs you need
-import { getAnalytics } from "firebase/analytics";
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-import '../../firebase.js';
-
-const {firebaseConfig} = require('../../firebase.js');
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
 export default function LoginScreen() {
     const [isOwner, setIsOwner] = useState(false);
     const router = useRouter();
