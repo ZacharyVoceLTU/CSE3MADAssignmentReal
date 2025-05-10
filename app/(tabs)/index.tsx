@@ -5,28 +5,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useRouter } from 'expo-router';
 
-
-
-
-// Firebase Imports
-import { initializeApp } from "firebase/app";
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-import '../../firebase.js';
-
-const {firebaseConfig} = require('../../firebase.js');
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// ERROR: No work
-//const auth = getAuth(app);
-
 export default function HomeScreen() {
 const router = useRouter();
 
   function handleCreateAccount() {
     router.push('/login')
-}
+  }
 
   return (
     <>
@@ -97,7 +81,7 @@ export function OwnerLogin({ title }: { title: string }) {
   const router = useRouter();
 
   function handleLogin() {
-    // Use Contetx API to get global access to isOwner
+    // TODO: Use Contetx API to get global access to isOwner from firestore
     router.push('/mapScreen');
   }
 
