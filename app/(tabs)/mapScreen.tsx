@@ -10,6 +10,9 @@ import { useRouter } from 'expo-router';
 
 import Constants from 'expo-constants';
 
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../../firebase/firebaseSetup.js';
+
 
 export default function MapScreen() {
   const router = useRouter();
@@ -48,6 +51,7 @@ function Map() {
 
   const router = useRouter();
   
+  // Fetch nearby mechanics details
   useEffect(() => {
     const fetchLocationAndMechanics = async () => {
       try {
@@ -70,6 +74,22 @@ function Map() {
 
     fetchLocationAndMechanics();
   }, []);
+
+  const addMechanicToFireStore = async (mechanicData: Mechanic) => {
+    try {
+      await setDoc(doc(db, 'mechanic_markers', mechanicData.place_id), {
+        mechanic_name: mechanicData.name,
+      })
+    } catch (error) {
+
+    }
+  };
+
+  useEffect(() => {
+    mechanics.forEach(mechanic => {
+      addMechanicToFireStore(mechanic);
+    })
+  }, [mechanics]);
 
   const getNearbyMechanics = async (latitude: number, longitude: number): Promise<Mechanic[]> => {
     const apiKey = Constants.expoConfig?.extra?.API_KEY;
@@ -97,7 +117,6 @@ function Map() {
 
   // TODO: Store marker details in firebase fireStore.
   // Only add to firestore if not already in there
-  // If have time use custom markers for availbility.
   const renderMechanicsMarkers = () => {
     return mechanics.map((marker) => (
       <Marker
