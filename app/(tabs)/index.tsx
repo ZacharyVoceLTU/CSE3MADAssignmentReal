@@ -6,11 +6,22 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
+const router = useRouter();
+
+  function handleCreateAccount() {
+    router.push('/login')
+}
+
   return (
     <>
       <SafeAreaView style = {{alignItems: 'center'}}> 
         <Text style = {{fontSize: 50}}>Check In</Text> 
       </SafeAreaView>
+      <TouchableOpacity onPress={handleCreateAccount}>
+      <Text style = {styles.link}>
+        Create an account 
+        </Text>
+      </TouchableOpacity>
       <UserLogin title = "Customer"></UserLogin>
       <OwnerLogin title = "Owner"></OwnerLogin>
     </> 
@@ -34,7 +45,7 @@ export function UserLogin({ title }: { title: string }) {
     <>
       <TouchableOpacity style = {styles.button}
                         onPress = {handleLogin}>
-        <Text> Customer </Text>
+        <Text style = {{fontSize: 25}}> {title} </Text>
       </TouchableOpacity>
       <TextInput
         style = {styles.CheckInInput}
@@ -70,6 +81,7 @@ export function OwnerLogin({ title }: { title: string }) {
   const router = useRouter();
 
   function handleLogin() {
+    // Use Contetx API to get global access to isOwner
     router.push('/mapScreen');
   }
 
@@ -77,7 +89,7 @@ export function OwnerLogin({ title }: { title: string }) {
     <>
       <TouchableOpacity style = {styles.button}
                         onPress = {handleLogin}>
-        <Text> Owner </Text>
+        <Text style = {{fontSize: 25}}> {title} </Text>
       </TouchableOpacity>
       <TextInput
       style = {styles.CheckInInput}
@@ -95,10 +107,15 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: 'center',
     marginHorizontal: 75,
-    marginVertical: 50,
+    marginVertical: 50
   },
   CheckInInput: {
     marginHorizontal: 40,
     paddingLeft: 5
+  },
+  link: {
+    textAlign: 'center',
+    color: '#0000EE',
+    fontSize: 15,
   }
 });
