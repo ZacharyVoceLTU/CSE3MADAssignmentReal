@@ -10,7 +10,6 @@ import { useRouter } from 'expo-router';
 
 // Firebase Imports
 import { initializeApp } from "firebase/app";
-import { getAuth } from 'firebase/auth';
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 import '../../firebase.js';
@@ -19,7 +18,8 @@ const {firebaseConfig} = require('../../firebase.js');
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+// ERROR: No work
+//const auth = getAuth(app);
 
 export default function HomeScreen() {
 const router = useRouter();
