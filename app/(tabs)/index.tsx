@@ -1,41 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase/firebaseSetup.js';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase/firebaseSetup.js";
 
 export default function HomeScreen() {
-const router = useRouter();
+  const router = useRouter();
 
   function handleCreateAccount() {
-    router.push('/login')
+    router.push("/login");
   }
 
   return (
     <>
-      <SafeAreaView style = {{alignItems: 'center'}}> 
-        <Text style = {{fontSize: 50}}>Check In</Text> 
+      <SafeAreaView style={{ alignItems: "center" }}>
+        <Text style={{ fontSize: 50 }}>Check In</Text>
       </SafeAreaView>
       <TouchableOpacity onPress={handleCreateAccount}>
-      <Text style = {styles.link}>
-        Create an account 
-        </Text>
+        <Text style={styles.link}>Create an account</Text>
       </TouchableOpacity>
-      <UserLogin title = "Customer"></UserLogin>
-      <OwnerLogin title = "Owner"></OwnerLogin>
-    </> 
+      <UserLogin title="Customer"></UserLogin>
+      <OwnerLogin title="Owner"></OwnerLogin>
+    </>
   );
 }
 
 export function UserLogin({ title }: { title: string }) {
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [location, setLocation] = useState('');
-  const [carModel, setCarModel] = useState('');
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [location, setLocation] = useState("");
+  const [carModel, setCarModel] = useState("");
 
   const router = useRouter();
 
@@ -43,71 +41,69 @@ export function UserLogin({ title }: { title: string }) {
     async function signIn() {
       try {
         await signInWithEmailAndPassword(auth, email, phoneNumber);
-        router.push('/mapScreen');
+        router.push("/mapScreen");
       } catch (error) {
-        console.error('Couldn\'t login: ', error)
+        console.error("Couldn't login: ", error);
       }
     }
 
-    signIn();    
+    signIn();
   }
 
   // TODO: Change to only generic login screen
   return (
     <>
-      <TouchableOpacity style = {styles.button}
-                        onPress = {handleLogin}>
-        <Text style = {{fontSize: 25}}> {title} </Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={{ fontSize: 25 }}> {title} </Text>
       </TouchableOpacity>
       <TextInput
-        style = {styles.CheckInInput}
-          placeholder = "Your name"
-          value = {email}
-          onChangeText = {setEmail}
-        />
-        <TextInput 
-          style = {styles.CheckInInput}
-          placeholder='Your Phone number'
-          value = {phoneNumber}
-          onChangeText = {setPhoneNumber}
-        />
-        <TextInput 
-          style = {styles.CheckInInput}
-          placeholder='Your Address'
-          value = {location}
-          onChangeText = {setLocation}
-        />
-        <TextInput 
-          style = {styles.CheckInInput}
-          placeholder='Your Car Manufacturer'
-          value = {carModel}
-          onChangeText = {setCarModel}
-        />
+        style={styles.CheckInInput}
+        placeholder="Your name"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        style={styles.CheckInInput}
+        placeholder="Your Phone number"
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
+      />
+      <TextInput
+        style={styles.CheckInInput}
+        placeholder="Your Address"
+        value={location}
+        onChangeText={setLocation}
+      />
+      <TextInput
+        style={styles.CheckInInput}
+        placeholder="Your Car Manufacturer"
+        value={carModel}
+        onChangeText={setCarModel}
+      />
     </>
   );
 }
 
 export function OwnerLogin({ title }: { title: string }) {
-  const [shopName, setShopName] = useState('');
+  const [shopName, setShopName] = useState("");
 
   const router = useRouter();
 
   function handleLogin() {
     // TODO: Use Contetx API to get global access to isOwner from firestore
-    router.push('/mapScreen');
+    router.push("/mapScreen");
   }
 
   return (
     <>
-      <TouchableOpacity style = {styles.button}
-                        onPress = {handleLogin}>
-        <Text style = {{fontSize: 25}}> {title} </Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={{ fontSize: 25 }}> {title} </Text>
       </TouchableOpacity>
       <TextInput
-      style = {styles.CheckInInput}
-        placeholder = "Your shop name"
-        value = {shopName}
-        onChangeText = {setShopName}
+        style={styles.CheckInInput}
+        placeholder="Your shop name"
+        value={shopName}
+        onChangeText={setShopName}
       />
     </>
   );
@@ -115,19 +111,19 @@ export function OwnerLogin({ title }: { title: string }) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#e7cbf5',
+    backgroundColor: "#e7cbf5",
     padding: 15,
-    alignItems: 'center',
+    alignItems: "center",
     marginHorizontal: 75,
-    marginVertical: 50
+    marginVertical: 50,
   },
   CheckInInput: {
     marginHorizontal: 40,
-    paddingLeft: 5
+    paddingLeft: 5,
   },
   link: {
-    textAlign: 'center',
-    color: '#0000EE',
+    textAlign: "center",
+    color: "#0000EE",
     fontSize: 15,
-  }
+  },
 });
