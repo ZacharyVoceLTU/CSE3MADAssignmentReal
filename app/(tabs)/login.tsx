@@ -3,14 +3,28 @@ import { useState } from 'react';
 import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase/firebaseSetup.js';
+
 export default function LoginScreen() {
     const [isOwner, setIsOwner] = useState(false);
+    const [email, setEmail] = useState('');
+    const [passowrd, setPassword] = useState('');
     const router = useRouter();
 
     const toggleSwitch = () => setIsOwner(previousState => !previousState)
 
     const handleCreateAccount = () => {
-        router.push('/')
+        async function createUser() {
+            try {
+                await createUserWithEmailAndPassword(auth,email, passowrd );
+            } catch (error) {
+                console.error("Couldn't create account:", error)
+            }
+        }
+
+        createUser();
+        router.push('/mapScreen')
     }
 
     return (
@@ -20,8 +34,12 @@ export default function LoginScreen() {
             </SafeAreaView>
             <SafeAreaView style = {styles.input}>
                 <View>
-                    <TextInput placeholder = {'What is your name?'} />
-                    <TextInput placeholder = {'What is your phone number?'} />
+                    <TextInput  onChangeText={setEmail}
+                                value = {email}
+                                placeholder = {'What is your email?'} />
+                    <TextInput  onChangeText={setPassword}
+                                value = {passowrd}
+                                placeholder = {'What is your passowrd?'} />
                     <View style = {styles.container}>
                         <Text style = {styles.text}> Are you an owner? </Text>
                         <Switch 

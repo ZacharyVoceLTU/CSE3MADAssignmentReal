@@ -5,6 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useRouter } from 'expo-router';
 
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase/firebaseSetup.js';
+
 export default function HomeScreen() {
 const router = useRouter();
 
@@ -37,10 +40,19 @@ export function UserLogin({ title }: { title: string }) {
   const router = useRouter();
 
   function handleLogin() {
-    // TODO If successful go to next page, if not then tell user no good
-    router.push('/mapScreen');
+    async function signIn() {
+      try {
+        await signInWithEmailAndPassword(auth, email, phoneNumber);
+        router.push('/mapScreen');
+      } catch (error) {
+        console.error('Couldn\'t login: ', error)
+      }
+    }
+
+    signIn();    
   }
 
+  // TODO: Change to only generic login screen
   return (
     <>
       <TouchableOpacity style = {styles.button}
