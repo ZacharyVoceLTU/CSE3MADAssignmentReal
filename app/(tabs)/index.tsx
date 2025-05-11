@@ -41,6 +41,7 @@ export function UserLogin({ title }: { title: string }) {
     async function signIn() {
       try {
         await signInWithEmailAndPassword(auth, email, phoneNumber);
+        // TODO: Use Contetx API to provide global access to isOwner from firestore
         router.push("/mapScreen");
       } catch (error) {
         console.error("Couldn't login: ", error);
@@ -90,7 +91,7 @@ export function OwnerLogin({ title }: { title: string }) {
   const router = useRouter();
 
   function handleLogin() {
-    // TODO: Use Contetx API to get global access to isOwner from firestore
+    
     router.push("/mapScreen");
   }
 

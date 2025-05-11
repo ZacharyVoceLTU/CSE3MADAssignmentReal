@@ -7,7 +7,6 @@ import { firebaseConfig } from './firebase';
 
 let app = initializeApp(firebaseConfig)
 
-// ERROR: No work
 const auth = getAuth(app);
 
 const db = getFirestore(app);

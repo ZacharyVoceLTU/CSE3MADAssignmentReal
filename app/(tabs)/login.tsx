@@ -25,6 +25,7 @@ export default function LoginScreen() {
     async function createUser() {
       try {
         await createUserWithEmailAndPassword(auth, email, passowrd);
+        // TODO: Add information like isOwner to firestore
       } catch (error) {
         console.error("Couldn't create account:", error);
       }
@@ -38,8 +39,7 @@ export default function LoginScreen() {
     <>
       <SafeAreaView>
         <Text style={{ fontSize: 50, textAlign: "center" }}>
-          {" "}
-          Create Account{" "}
+          Create Account
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.input}>
