@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -10,7 +9,7 @@ import { useRouter } from 'expo-router';
 
 import Constants from 'expo-constants';
 
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseSetup.js';
 
 
@@ -39,7 +38,7 @@ export default function MapScreen() {
 interface Mechanic {
   place_id: string; // used as a unique key
   name: string;
-  description: string;
+  address: string;
   latitude: number;
   longitude: number;
 }
@@ -60,7 +59,6 @@ function Map() {
           alert('Permission to access location was denied');
           return;
         }
-
         
         const location = await Location.getCurrentPositionAsync({});
         const nearbyMechanics = await getNearbyMechanics(location.coords.latitude, location.coords.longitude);
@@ -72,51 +70,97 @@ function Map() {
       }
     };
 
-    fetchLocationAndMechanics();
+    const getNearbyMechanics = async (latitude: number, longitude: number): Promise<Mechanic[]> => {
+      const apiKey = Constants.expoConfig?.extra?.API_KEY;
+      const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=car_repair&key=${apiKey}`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data.results?.map((result: any) => ({
+          place_id: result.place_id,
+          name: result.name,
+          address: result.formatted_address,
+          latitude: result.geometry.location.lat,
+          longitude: result.geometry.location.lng
+        })) || [];
+      } catch (error) {
+        console.error('Error fetching nearby mechanics:', error);
+        return [];
+      }
+    };
+
+    fetchLocationAndMechanics(); // fetch neaby mechanics
   }, []);
 
-  const addMechanicToFireStore = async (mechanicData: Mechanic) => {
-    try {
-      await setDoc(doc(db, 'mechanic_markers', mechanicData.place_id), {
-        mechanic_name: mechanicData.name,
-      })
-    } catch (error) {
 
+
+  useEffect(() => { // Adds marker details to firestore if it doesn't already exist in there
+    const addMechanicToFireStore = async (mechanicData: Mechanic) => {
+      // Fetch data from place details api
+      const apiKey = Constants.expoConfig?.extra?.API_KEY;
+      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${mechanicData.place_id}&key=${apiKey}&fields=formatted_address,formatted_phone_number,website`;
+
+      let address: string;
+      let phoneNo: string;
+      let website: string;
+
+      try { 
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log(data.result);
+        address = data.result.formatted_address
+        phoneNo = data.result.formatted_phone_number ?? ''; // Not all mechanics provide phone number
+        website = data.result.website ?? '';                // Not all mechanics provide website
+      } catch (error) {
+        console.error('Error fetching nearby mechanics:', error);
+        return [];
+      }
+
+      try { // Add details to firestore
+        await setDoc(doc(db, 'mechanic_markers', mechanicData.place_id), {
+          mechanic_name: mechanicData.name,
+          address: address,
+          phone_number: phoneNo,
+          website: website
+        });
+        console.log(`Mechanic: ${mechanicData.name} added to firestore`)
+      } catch (error) {
+        console.error('Error adding to firestore:', error)
+      }
+    };
+
+    async function checkDocumentExists(collection: string, place_id: string): Promise<boolean> {
+      try {
+        const docRef = doc(db, collection, place_id); // reference
+        const docSnap = await getDoc(docRef); // document snapshot
+        return docSnap.exists();  // does it exist
+      } catch (error) {
+        console.error('Error checking document existance: ', error); 
+        return false;
+      }
     }
-  };
 
-  useEffect(() => {
-    mechanics.forEach(mechanic => {
-      addMechanicToFireStore(mechanic);
-    })
+    async function addToFirestore() { // Checks if marker details exists in firestore, prevents unecessary api calls
+      for (const mechanic of mechanics) {
+        const docExist = await checkDocumentExists('mechanic_markers', mechanic.place_id);
+        if (!docExist) {  // Doesn't exist in firestore, add it
+          addMechanicToFireStore(mechanic);
+        } else {
+          console.log(`Mechanic: ${mechanic.name} already exists in firestore`)
+        }
+      }
+    }
+
+    addToFirestore();
   }, [mechanics]);
 
-  const getNearbyMechanics = async (latitude: number, longitude: number): Promise<Mechanic[]> => {
-    const apiKey = Constants.expoConfig?.extra?.API_KEY;
-    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=car_repair&key=${apiKey}`;
 
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      return data.results?.map((result: any) => ({
-        place_id: result.place_id,
-        name: result.name,
-        description: result.formatted_address,
-        latitude: result.geometry.location.lat,
-        longitude: result.geometry.location.lng
-      })) || [];
-    } catch (error) {
-      console.error('Error fetching nearby mechanics:', error);
-      return [];
-    }
-  };
 
   function handleDetails(marker: Mechanic) {
-    router.push('/markerDetails')
+    router.push(`/markerDetails?place_id=${marker.place_id}`);
   }
 
-  // TODO: Store marker details in firebase fireStore.
-  // Only add to firestore if not already in there
   const renderMechanicsMarkers = () => {
     return mechanics.map((marker) => (
       <Marker
@@ -125,7 +169,7 @@ function Map() {
                       longitude: marker.longitude
         }}
         title = {marker.name}
-        description={marker.description}
+        description={marker.address}
         onPress={() => handleDetails(marker)}
       />
     ));
