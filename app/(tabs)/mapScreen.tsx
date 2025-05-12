@@ -4,10 +4,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import Constants from "expo-constants";
 import * as Location from "expo-location";
 import { useLocalSearchParams, useRouter } from "expo-router";
-
-import Constants from "expo-constants";
+import { Circle, Svg } from 'react-native-svg';
 
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseSetup.js";
@@ -42,6 +42,7 @@ interface Mechanic {
   address: string;
   latitude: number;
   longitude: number;
+  rating: number;
 }
 
 function Map() {
@@ -78,10 +79,7 @@ function Map() {
       }
     };
 
-    const getNearbyMechanics = async (
-      latitude: number,
-      longitude: number
-    ): Promise<Mechanic[]> => {
+    const getNearbyMechanics = async (latitude: number, longitude: number): Promise<Mechanic[]> => {
       const apiKey = Constants.expoConfig?.extra?.API_KEY;
       const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=car_repair&key=${apiKey}`;
 
@@ -95,6 +93,7 @@ function Map() {
             address: result.formatted_address,
             latitude: result.geometry.location.lat,
             longitude: result.geometry.location.lng,
+            rating: result.rating
           })) || []
         );
       } catch (error) {
@@ -111,11 +110,12 @@ function Map() {
     const addMechanicToFireStore = async (mechanicData: Mechanic) => {
       // Fetch data from place details api
       const apiKey = Constants.expoConfig?.extra?.API_KEY;
-      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${mechanicData.place_id}&key=${apiKey}&fields=formatted_address,formatted_phone_number,website`;
+      const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${mechanicData.place_id}&key=${apiKey}&fields=formatted_address,formatted_phone_number,website,rating`;
 
       let address: string;
       let phoneNo: string;
       let website: string;
+      let rating;
 
       try {
         const response = await fetch(url);
@@ -123,6 +123,7 @@ function Map() {
         address = data.result.formatted_address;
         phoneNo = data.result.formatted_phone_number ?? ""; // Not all mechanics provide phone number
         website = data.result.website ?? ""; // Not all mechanics provide website
+        rating = data.result.rating ?? 0;
       } catch (error) {
         console.error("Error fetching nearby mechanics:", error);
         return [];
@@ -137,7 +138,8 @@ function Map() {
           website: website,
           email: "",
           specialise: "",
-          note: ""
+          note: "",
+          rating: rating
         });
         console.log(`Mechanic: ${mechanicData.name} added to firestore`);
       } catch (error) {
@@ -182,6 +184,16 @@ function Map() {
     router.push(`/markerDetails?place_id=${marker.place_id}&isOwner=${isOwner}`);
   }
 
+  const renderCustomMarker = (rating: number) => {
+    const fillColor = rating >= 2.5 ? 'green' : 'red'; // Change color based on status
+    return (
+      <Svg height="40" width="40">
+        <Circle cx="20" cy="20" r="15" fill={fillColor} >
+        </Circle>
+      </Svg>
+    );
+  };
+
   const renderMechanicsMarkers = () => {
     return mechanics.map((marker) => (
       <Marker
@@ -189,8 +201,9 @@ function Map() {
         coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
         title={marker.name}
         description={marker.address}
-        onPress={() => handleDetails(marker)}
-      />
+        onPress={() => handleDetails(marker)}>
+          {renderCustomMarker(marker.rating)}
+      </Marker>
     ));
   };
 
