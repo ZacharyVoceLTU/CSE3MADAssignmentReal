@@ -6,7 +6,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase/firebaseSetup.js";
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from "../../firebase/firebaseSetup.js";
 
 export default function HomeScreen() {  // TODO SafeAreaProvidor
   const router = useRouter();
@@ -38,8 +39,12 @@ export function UserLogin() {
     async function signIn() {
       try {
         await signInWithEmailAndPassword(auth, email, phoneNumber);
-        // TODO: Use Contetx API to provide global access to isOwner from firestore
-        router.push("/mapScreen");
+        const docSnap = await getDoc(doc(db, 'users', email))
+        let isOwner: boolean;
+        if (docSnap.exists()) {
+          isOwner = docSnap.data().is_owner;
+          router.push(`/mapScreen?isOwner=${isOwner}`);
+        }
       } catch (error) {
         console.error("Couldn't login: ", error);
       }

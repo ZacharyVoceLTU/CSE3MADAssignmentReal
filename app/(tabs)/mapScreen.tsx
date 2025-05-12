@@ -5,7 +5,7 @@ import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import * as Location from "expo-location";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 import Constants from "expo-constants";
 
@@ -49,6 +49,8 @@ function Map() {
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
+  const params = useLocalSearchParams();
+  const isOwner = params.isOwner === 'true';
 
   // Fetch nearby mechanics details
   useEffect(() => {
@@ -115,7 +117,6 @@ function Map() {
       try {
         const response = await fetch(url);
         const data = await response.json();
-        console.log(data.result);
         address = data.result.formatted_address;
         phoneNo = data.result.formatted_phone_number ?? ""; // Not all mechanics provide phone number
         website = data.result.website ?? ""; // Not all mechanics provide website
@@ -172,7 +173,7 @@ function Map() {
   }, [mechanics]);
 
   function handleDetails(marker: Mechanic) {
-    router.push(`/markerDetails?place_id=${marker.place_id}`);
+    router.push(`/markerDetails?place_id=${marker.place_id}&isOwner=${isOwner}`);
   }
 
   const renderMechanicsMarkers = () => {

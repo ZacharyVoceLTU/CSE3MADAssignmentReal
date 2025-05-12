@@ -26,6 +26,7 @@ export default function Details() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const place_id = params.place_id as string;
+  const isOwner = params.isOwner === 'true';
 
   function handleEdit() {
     router.push("/editDetails");
@@ -49,8 +50,6 @@ export default function Details() {
 
     getMarkerDetails();
   }, [place_id]);
-
-  const isOwner = false;
 
   if (name === "") {
     <>
