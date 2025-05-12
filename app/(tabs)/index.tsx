@@ -34,6 +34,7 @@ export default function HomeScreen() {
 export function UserLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [failedLogin, setfailedLogin] = useState(false);
 
   const router = useRouter();
 
@@ -46,10 +47,12 @@ export function UserLogin() {
           const isOwner: boolean = docSnap.data().is_owner;
           setEmail('');
           setPassword('');
+          setfailedLogin(false);
           router.push(`/mapScreen?isOwner=${isOwner}`);
         }
       } catch (error) {
         console.error("Couldn't login: ", error);
+        setfailedLogin(true);
       }
     }
 
@@ -61,6 +64,13 @@ export function UserLogin() {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={{ fontSize: 25 }}> Log in </Text>
       </TouchableOpacity>
+      <View>
+        {failedLogin ? (
+          <Text style={styles.LoginError}> Invalid login </Text>
+        ) : (
+          <></>
+        )}
+      </View>
       <TextInput
         style={styles.CheckInInput}
         placeholder=" Email..."
@@ -102,4 +112,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textDecorationLine: 'underline'
   },
+  LoginError: {
+    textAlign: 'center',
+    color: 'red',
+    marginBottom: -5
+  }
 });
