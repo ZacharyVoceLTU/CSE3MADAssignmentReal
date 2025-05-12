@@ -8,7 +8,7 @@ import { useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/firebaseSetup.js";
 
-export default function HomeScreen() {
+export default function HomeScreen() {  // TODO SafeAreaProvidor
   const router = useRouter();
 
   function handleCreateAccount() {
@@ -23,17 +23,14 @@ export default function HomeScreen() {
       <TouchableOpacity onPress={handleCreateAccount}>
         <Text style={styles.link}>Create an account</Text>
       </TouchableOpacity>
-      <UserLogin title="Customer"></UserLogin>
-      <OwnerLogin title="Owner"></OwnerLogin>
+      <UserLogin></UserLogin>
     </>
   );
 }
 
-export function UserLogin({ title }: { title: string }) {
+export function UserLogin() {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [location, setLocation] = useState("");
-  const [carModel, setCarModel] = useState("");
 
   const router = useRouter();
 
@@ -51,60 +48,22 @@ export function UserLogin({ title }: { title: string }) {
     signIn();
   }
 
-  // TODO: Change to only generic login screen
   return (
     <>
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={{ fontSize: 25 }}> {title} </Text>
+        <Text style={{ fontSize: 25 }}> Log in </Text>
       </TouchableOpacity>
       <TextInput
         style={styles.CheckInInput}
-        placeholder="Your name"
+        placeholder="Email..."
         value={email}
         onChangeText={setEmail}
       />
       <TextInput
         style={styles.CheckInInput}
-        placeholder="Your Phone number"
+        placeholder="Passowrd..."
         value={phoneNumber}
         onChangeText={setPhoneNumber}
-      />
-      <TextInput
-        style={styles.CheckInInput}
-        placeholder="Your Address"
-        value={location}
-        onChangeText={setLocation}
-      />
-      <TextInput
-        style={styles.CheckInInput}
-        placeholder="Your Car Manufacturer"
-        value={carModel}
-        onChangeText={setCarModel}
-      />
-    </>
-  );
-}
-
-export function OwnerLogin({ title }: { title: string }) {
-  const [shopName, setShopName] = useState("");
-
-  const router = useRouter();
-
-  function handleLogin() {
-    
-    router.push("/mapScreen");
-  }
-
-  return (
-    <>
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={{ fontSize: 25 }}> {title} </Text>
-      </TouchableOpacity>
-      <TextInput
-        style={styles.CheckInInput}
-        placeholder="Your shop name"
-        value={shopName}
-        onChangeText={setShopName}
       />
     </>
   );
