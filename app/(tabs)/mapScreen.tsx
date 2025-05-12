@@ -185,9 +185,8 @@ function Map() {
   }
 
   const renderCustomMarker = (rating: number) => {
-    rating = rating == undefined ? 0 : rating;  // Don't know why it's still undefined with the above stuff
-    console.debug(rating)
-    let fillColor = rating >= 4 ? 'green' : 'red';  // Change color based on status 
+    rating = rating == undefined ? 0 : rating;        // Don't know why it's still undefined with the above stuff
+    let fillColor = rating >= 4 ? 'green' : 'red';    // Change color based on status 
     fillColor = rating == 0 ? 'grey' : fillColor;     // Change colour if rating === 0 
     return (
       <Svg height="40" width="40">

@@ -18,7 +18,7 @@ export default function Details() {
   const [avaliable, setAvaliable] = useState(false);
   const [name, setName] = useState("mechanic");
   const [address, setAddress] = useState("");
-  const [Specialise, setSpecialise] = useState(""); // Set by owner themselves
+  const [specialise, setSpecialise] = useState(""); // Set by owner themselves
   const [notes, setNotes] = useState(""); // Set by oowner themselves
   const [phoneNo, setphoneNo] = useState("");
   const [website, setWebsite] = useState("");
@@ -28,21 +28,24 @@ export default function Details() {
   const params = useLocalSearchParams();
   const place_id = params.place_id as string;
   const isOwner = params.isOwner === 'true';
+  const updated = params.updated; // HACK: updated only used to force useEffect to rerun
 
   function handleEdit() {
-    router.push("/editDetails");
+    router.push(`/editDetails?place_id=${place_id}`);
   }
 
   function handleBack() {
-    router.push('/mapScreen')
+    router.push(`/mapScreen?isOwner=${isOwner}`)
   }
 
   useEffect(() => {
     async function getMarkerDetails() {
       try {
+        console.log(place_id);
+        console.log(0);
         const docRef = doc(db, "mechanic_markers", place_id);
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
+        if (docSnap.exists()) { 
           setName(docSnap.data().mechanic_name);
           setAddress(docSnap.data().address);
           setphoneNo(docSnap.data().phone_number);
@@ -57,7 +60,7 @@ export default function Details() {
     }
 
     getMarkerDetails();
-  }, [place_id]);
+  }, [place_id, updated]);
 
   if (name === "") {
     <>
@@ -73,12 +76,11 @@ export default function Details() {
         </View>
 
         <View style={styles.available}>
-          {" "}
           {avaliable ? <Text> Available </Text> : <Text> Not avaliable </Text>}
         </View>
         <View style={styles.info}>
           <Text> Specialise </Text>
-          <Text> {Specialise} </Text>
+          <Text> {specialise} </Text>
         </View>
         <View style={styles.info}>
           <Text> Notes </Text>
@@ -91,7 +93,7 @@ export default function Details() {
           <Text>
             Phone No.:{phoneNo} {'\n'}
             Email: {email }{'\n'}
-            Website {website} {'\n'}
+            Website: {website} {'\n'}
           </Text>
         </View>
         <View>
