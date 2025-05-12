@@ -156,7 +156,7 @@ function Map() {
         const docSnap = await getDoc(docRef); // document snapshot
         return docSnap.exists(); // does it exist
       } catch (error) {
-        console.error("Error checking document existance: ", error);
+        console.error("Error checking document existance: ", error); 
         return false;
       }
     }
@@ -185,7 +185,10 @@ function Map() {
   }
 
   const renderCustomMarker = (rating: number) => {
-    const fillColor = rating >= 2.5 ? 'green' : 'red'; // Change color based on status
+    rating = rating == undefined ? 0 : rating;  // Don't know why it's still undefined with the above stuff
+    console.debug(rating)
+    let fillColor = rating >= 4 ? 'green' : 'red';  // Change color based on status 
+    fillColor = rating == 0 ? 'grey' : fillColor;     // Change colour if rating === 0 
     return (
       <Svg height="40" width="40">
         <Circle cx="20" cy="20" r="15" fill={fillColor} >
