@@ -33,18 +33,19 @@ export default function HomeScreen() {
 
 export function UserLogin() {
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
 
   const router = useRouter();
 
   function handleLogin() {
     async function signIn() {
       try {
-        await signInWithEmailAndPassword(auth, email, phoneNumber);
-        const docSnap = await getDoc(doc(db, 'users', email))
-        let isOwner: boolean;
+        await signInWithEmailAndPassword(auth, email, password);
+        const docSnap = await getDoc(doc(db, 'users', email));
         if (docSnap.exists()) {
-          isOwner = docSnap.data().is_owner;
+          const isOwner: boolean = docSnap.data().is_owner;
+          setEmail('');
+          setPassword('');
           router.push(`/mapScreen?isOwner=${isOwner}`);
         }
       } catch (error) {
@@ -70,8 +71,9 @@ export function UserLogin() {
       <TextInput
         style={styles.CheckInInput}
         placeholder=" Passowrd..."
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry={true}
       />
     </>
   );

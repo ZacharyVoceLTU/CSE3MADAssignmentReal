@@ -32,13 +32,16 @@ export default function LoginScreen() {
           name: name,
           is_owner: isOwner
         });
+        setEmail('');
+        setPassword('');
+        setName('');
+        router.push(`/mapScreen?isOwner=${isOwner}`);
       } catch (error) {
         console.error("Couldn't create account:", error);
       }
     }
 
     createUser();
-    router.push(`/mapScreen?isOwner=${isOwner}`);
   };
 
   return (
@@ -65,6 +68,7 @@ export default function LoginScreen() {
               onChangeText={setPassword}
               value={passowrd}
               placeholder={"What is your passowrd?"}
+              secureTextEntry={true}
             />
             <TextInput
               style = {styles.CheckInInput}
