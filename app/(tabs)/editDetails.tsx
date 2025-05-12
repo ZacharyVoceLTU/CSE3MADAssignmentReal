@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
 import {
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import { useRouter } from "expo-router";
@@ -48,6 +48,8 @@ function ChangeContacts() {
     // Upload to firestore
     router.push("/markerDetails");
   }
+  
+  // Use setDoc merge true
 
   return (
     <>
@@ -86,14 +88,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 70,
   },
   input: {
-    backgroundColor: "#dbcffa",
+    backgroundColor: "#d6d6d6",
     marginHorizontal: 70,
     paddingBottom: 50,
     marginBottom: 20,
   },
   saveButton: {
+    padding: 15,
     alignItems: "center",
-    backgroundColor: "#dbcffa",
+    backgroundColor: "#e7cbf5",
     marginHorizontal: 70,
   },
 });

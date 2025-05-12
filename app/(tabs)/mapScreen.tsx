@@ -21,12 +21,15 @@ export default function MapScreen() {
 
   return (
     <>
-      <SafeAreaView style={{ alignItems: "center" }}>
-        <Text style={{ fontSize: 50 }}>Map</Text>
+      <SafeAreaView>
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ fontSize: 50 }}> Map </Text>
+        </View>
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+          <Text> Back </Text>
+        </TouchableOpacity>
       </SafeAreaView>
-      <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-        <Text> Back </Text>
-      </TouchableOpacity>
+      
       <Map />
     </>
   );
@@ -132,6 +135,9 @@ function Map() {
           address: address,
           phone_number: phoneNo,
           website: website,
+          email: "",
+          specialise: "",
+          note: ""
         });
         console.log(`Mechanic: ${mechanicData.name} added to firestore`);
       } catch (error) {
@@ -212,7 +218,7 @@ function Map() {
   // Render map with user location and nearby mechanics
   return (
     <>
-      <View style={styles.map}>
+      <View style={styles.mapView}>
         <MapView
           provider={PROVIDER_DEFAULT}
           style={styles.map}
@@ -232,13 +238,24 @@ function Map() {
 
 const styles = StyleSheet.create({
   backButton: {
-    position: "absolute",
-    top: "5%",
-    left: "5%",
-    paddingVertical: 15,
-    paddingHorizontal: 40,
+    position: 'absolute',
     backgroundColor: "#e7cbf5",
+    padding: 15,
+    paddingHorizontal: 30,
     alignItems: "center",
+    marginLeft: 35,
+    marginRight: 75,
+    marginTop: 50,
+    marginBottom: 30
+  },
+  mapView: {
+    marginHorizontal: 10,
+    marginBottom: 10,
+    flex: 1,
+    borderColor: '#3452eb',
+    borderWidth: 2,
+    borderRadius: 50,
+    overflow: 'hidden',
   },
   map: {
     flex: 1,

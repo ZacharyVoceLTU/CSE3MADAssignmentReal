@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useRouter } from "expo-router";
@@ -9,7 +9,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from "../../firebase/firebaseSetup.js";
 
-export default function HomeScreen() {  // TODO SafeAreaProvidor
+export default function HomeScreen() {
   const router = useRouter();
 
   function handleCreateAccount() {
@@ -18,13 +18,15 @@ export default function HomeScreen() {  // TODO SafeAreaProvidor
 
   return (
     <>
-      <SafeAreaView style={{ alignItems: "center" }}>
-        <Text style={{ fontSize: 50 }}>Check In</Text>
+      <SafeAreaView>
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ fontSize: 50 }}>Check In</Text>
+        </View>
+        <UserLogin></UserLogin>
+        <TouchableOpacity onPress={handleCreateAccount}>
+          <Text style={styles.link}>Create an account</Text>
+        </TouchableOpacity>
       </SafeAreaView>
-      <TouchableOpacity onPress={handleCreateAccount}>
-        <Text style={styles.link}>Create an account</Text>
-      </TouchableOpacity>
-      <UserLogin></UserLogin>
     </>
   );
 }
@@ -60,13 +62,14 @@ export function UserLogin() {
       </TouchableOpacity>
       <TextInput
         style={styles.CheckInInput}
-        placeholder="Email..."
+        placeholder=" Email..."
         value={email}
         onChangeText={setEmail}
+        
       />
       <TextInput
         style={styles.CheckInInput}
-        placeholder="Passowrd..."
+        placeholder=" Passowrd..."
         value={phoneNumber}
         onChangeText={setPhoneNumber}
       />
@@ -80,15 +83,21 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: "center",
     marginHorizontal: 75,
-    marginVertical: 50,
+    marginTop: 50,
+    marginBottom: 30
   },
   CheckInInput: {
     marginHorizontal: 40,
+    marginTop: 10,
     paddingLeft: 5,
+    backgroundColor: "#d6d6d6",
+    borderRadius: 4
   },
   link: {
     textAlign: "center",
     color: "#0000EE",
     fontSize: 15,
+    marginTop: 10,
+    textDecorationLine: 'underline'
   },
 });

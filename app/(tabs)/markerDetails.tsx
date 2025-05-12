@@ -22,6 +22,7 @@ export default function Details() {
   const [notes, setNotes] = useState(""); // Set by oowner themselves
   const [phoneNo, setphoneNo] = useState("");
   const [website, setWebsite] = useState("");
+  const [email, setEmail] = useState("");
 
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -30,6 +31,10 @@ export default function Details() {
 
   function handleEdit() {
     router.push("/editDetails");
+  }
+
+  function handleBack() {
+    router.push('/mapScreen')
   }
 
   useEffect(() => {
@@ -42,6 +47,9 @@ export default function Details() {
           setAddress(docSnap.data().address);
           setphoneNo(docSnap.data().phone_number);
           setWebsite(docSnap.data().website);
+          setNotes(docSnap.data().note);
+          setSpecialise(docSnap.data().specialise);
+          setEmail(docSnap.data().email)
         }
       } catch (error) {
         console.error("Could not fetch data from firestore: ", error);
@@ -54,59 +62,75 @@ export default function Details() {
   if (name === "") {
     <>
       <Text> Fetching data </Text>
-    </>;
+    </>
   }
 
-  // Only render button if firestore shop owner with ContextAPI
   return (
     <>
-      <SafeAreaView style={{ alignItems: "center" }}>
-        <Text style={{ fontSize: 30 }}> {name} </Text>
-      </SafeAreaView>
+      <SafeAreaView>
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ fontSize: 30, textAlign: 'center' }}> {name} </Text>
+        </View>
 
-      <View style={styles.info}>
-        {" "}
-        {avaliable ? <Text> Available </Text> : <Text> Not avaliable </Text>}
-        <Text> Hello </Text>
-      </View>
-      <View style={styles.info}>
-        <Text> Specialise </Text>
-        <Text> {Specialise} </Text>
-      </View>
-      <View style={styles.info}>
-        <Text> Notes </Text>
-        <Text> {notes} </Text>
-      </View>
-      <View style={styles.info}>
-        <Text> Contacts </Text>
-        <Text>
+        <View style={styles.available}>
           {" "}
-          {phoneNo} {website == "" ? "hello" : website}{" "}
-        </Text>
-      </View>
-      <View>
-        {isOwner ? (
-          <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
-            <Text> Edit Shop Details </Text>
-          </TouchableOpacity>
-        ) : (
-          <></>
-        )}
-      </View>
+          {avaliable ? <Text> Available </Text> : <Text> Not avaliable </Text>}
+        </View>
+        <View style={styles.info}>
+          <Text> Specialise </Text>
+          <Text> {Specialise} </Text>
+        </View>
+        <View style={styles.info}>
+          <Text> Notes </Text>
+          <Text>located: {address} {'\n'} 
+            {notes} 
+          </Text>
+        </View>
+        <View style={styles.info}>
+          <Text> Contacts </Text>
+          <Text>
+            Phone No.:{phoneNo} {'\n'}
+            Email: {email }{'\n'}
+            Website {website} {'\n'}
+          </Text>
+        </View>
+        <View>
+          {isOwner ? (
+            <TouchableOpacity style={styles.editButton} onPress={handleEdit}>
+              <Text> Edit Shop Details </Text>
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
+        </View>
+        <TouchableOpacity style={styles.editButton} onPress={handleBack}>
+          <Text> Back to Map </Text>
+        </TouchableOpacity>
+      </SafeAreaView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  available: {
+    alignItems: "center",
+    backgroundColor: "#f0e6f5",
+    marginTop: 30,
+    marginHorizontal: 90,
+    borderColor: '#ffffff',
+    paddingVertical: 15
+  },
   info: {
     alignItems: "center",
-    backgroundColor: "#e7cbf5",
+    backgroundColor: "#f0e6f5",
     marginTop: 30,
     marginHorizontal: 70,
+    borderColor: '#ffffff'
   },
   editButton: {
+    padding: 15,
     alignItems: "center",
-    backgroundColor: "#dbcffa",
+    backgroundColor: "#e7cbf5",
     marginTop: 30,
     marginHorizontal: 70,
   },

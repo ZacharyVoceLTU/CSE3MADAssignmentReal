@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -42,52 +43,76 @@ export default function LoginScreen() {
 
   return (
     <>
-      <SafeAreaView>
-        <Text style={{ fontSize: 50, textAlign: "center" }}>
-          Create Account
-        </Text>
-      </SafeAreaView>
-      <SafeAreaView style={styles.input}>
+    <SafeAreaView>
         <View>
-          <TextInput
-            onChangeText={setEmail}
-            value={email}
-            placeholder={"What is your email?"}
-          />
-          <TextInput
-            onChangeText={setPassword}
-            value={passowrd}
-            placeholder={"What is your passowrd?"}
-          />
-          <TextInput
-            onChangeText={setName}
-            value={name}
-            placeholder={"What is your name?"}
-          />
-          <View style={styles.container}>
-            <Text style={styles.text}> Are you an owner? </Text>
-            <Switch onValueChange={toggleSwitch} value={isOwner} />
+          <Text style={{ fontSize: 50, textAlign: "center" }}>
+            Create Account
+          </Text>
+        </View>
+        <View>
+          <View>
+            <TouchableOpacity style={styles.button} onPress={handleCreateAccount}>
+                    <Text style={{ fontSize: 25 }}> Log in </Text>
+                  </TouchableOpacity>
+            <TextInput
+              style = {styles.CheckInInput}
+              onChangeText={setEmail}
+              value={email}
+              placeholder={"What is your email?"}
+            />
+            <TextInput 
+              style = {styles.CheckInInput}
+              onChangeText={setPassword}
+              value={passowrd}
+              placeholder={"What is your passowrd?"}
+            />
+            <TextInput
+              style = {styles.CheckInInput}
+              onChangeText={setName}
+              value={name}
+              placeholder={"What is your name?"}
+            />
+            <View style={styles.container}>
+              <Text style={styles.switchText}> Are you an owner? </Text>
+              <Switch onValueChange={toggleSwitch} value={isOwner} />
+            </View>
           </View>
         </View>
-        <TouchableOpacity onPress={handleCreateAccount}>
-          <Text> Create account </Text>
-        </TouchableOpacity>
       </SafeAreaView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  input: {
+  button: {
+    backgroundColor: "#e7cbf5",
+    padding: 15,
     alignItems: "center",
-    marginTop: 150,
+    marginHorizontal: 75,
+    marginTop: 50,
+    marginBottom: 30
   },
   container: {
     flexDirection: "row",
     alignItems: "center",
   },
-  text: {
-    marginRight: 90,
-    fontSize: 16,
+  switchText: {
+    marginHorizontal: 35,
+    marginTop: 10,
+    paddingLeft: 5,
+  },
+  CheckInInput: {
+    marginHorizontal: 40,
+    marginTop: 10,
+    paddingLeft: 5,
+    backgroundColor: "#d6d6d6",
+    borderRadius: 4
+  },
+  link: {
+  textAlign: "center",
+  color: "#0000EE",
+  fontSize: 15,
+  marginTop: 10,
+  textDecorationLine: 'underline'
   },
 });
