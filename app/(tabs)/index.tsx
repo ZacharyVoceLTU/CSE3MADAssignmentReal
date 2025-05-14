@@ -23,8 +23,9 @@ export default function HomeScreen() {
           <Text style={{ fontSize: 50 }}>Check In</Text>
         </View>
         <UserLogin></UserLogin>
-        <TouchableOpacity onPress={handleCreateAccount}>
-          <Text style={styles.link}>Create an account</Text>
+        <TouchableOpacity onPress={handleCreateAccount}
+        testID = "t1" style={styles.link}>
+          <Text >Create an account</Text>
         </TouchableOpacity>
       </SafeAreaView>
     </>
